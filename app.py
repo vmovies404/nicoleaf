@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from datetime import datetime
-from PIL import Image
+
 import os, random
 
 app = Flask(__name__)
@@ -23,18 +23,7 @@ with app.app_context():
     db.create_all()
 
 def estimate_nicotine_level(image_path):
-    try:
-        img = Image.open(image_path).convert("RGB")
-        pixels = list(img.getdata())
-        total = len(pixels)
-        r = sum(p[0] for p in pixels) / total
-        g = sum(p[1] for p in pixels) / total
-        b = sum(p[2] for p in pixels) / total
-        green_ratio = g / (r + g + b + 0.001)
-        nicotine = round(0.8 + (green_ratio * 4.2), 2)
-        return max(0.8, min(5.0, nicotine))
-    except:
-        return round(random.uniform(1.5, 4.5), 2)
+    return round(random.uniform(1.0, 5.0), 2)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
