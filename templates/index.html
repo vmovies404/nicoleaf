@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NicoLeaf AI</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #020617;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* NAV */
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* GLOW */
+.glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: #10b981;
+    filter: blur(120px);
+    opacity: 0.2;
+    border-radius: 50%;
+    animation: float 6s infinite;
+}
+
+.glow2 {
+    background: #06b6d4;
+    bottom: -150px;
+    right: -150px;
+}
+
+.glow1 {
+    top: -150px;
+    left: -150px;
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0);}
+    50% { transform: translateY(-20px);}
+}
+
+/* CENTER */
+.container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 350px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to right, #10b981, #06b6d4);
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* INPUT */
+.upload {
+    border: 2px dashed #555;
+    padding: 30px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.upload:hover {
+    border-color: #10b981;
+}
+
+/* IMAGE */
+img {
+    max-height: 150px;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+
+<nav>
+    <h2>🌿 NicoLeaf</h2>
+    <a href="/history" style="color:#aaa;">History</a>
+</nav>
+
+<div class="container">
+
+<div>
+    <h1 style="text-align:center;">Nicotine AI Analyzer</h1>
+    <p style="text-align:center; color:#aaa;">Upload leaf image</p>
+
+    <form action="/" method="POST" enctype="multipart/form-data" class="card">
+
+        <label class="upload">
+            Click to upload
+            <input type="file" name="file" id="fileInput" hidden required>
+        </label>
+
+        <div id="preview"></div>
+
+        <button id="btn">Analyze</button>
+    </form>
+</div>
+
+</div>
+
+<script>
+const input = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+
+input.addEventListener("change", (e)=>{
+    const file = e.target.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = (ev)=>{
+            preview.innerHTML = `<img src="${ev.target.result}">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+document.querySelector("form").addEventListener("submit", ()=>{
+    document.getElementById("btn").innerText = "Analyzing...";
+});
+</script>
+
+</body>
+</html>

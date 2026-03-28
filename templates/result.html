@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Result - NicoLeaf</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #020617;
+    color: white;
+}
+
+/* NAV */
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* GLOW */
+.glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    filter: blur(120px);
+    opacity: 0.2;
+    border-radius: 50%;
+    animation: float 6s infinite;
+}
+
+.glow1 { background:#10b981; top:-150px; left:-150px;}
+.glow2 { background:#06b6d4; bottom:-150px; right:-150px;}
+
+@keyframes float {
+    0%,100% { transform: translateY(0);}
+    50% { transform: translateY(-20px);}
+}
+
+/* MAIN */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.card {
+    display: flex;
+    gap: 40px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+img {
+    max-width: 300px;
+    border-radius: 15px;
+}
+
+/* GAUGE */
+.bar-bg {
+    width: 100%;
+    height: 8px;
+    background: #222;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.bar-fill {
+    height: 8px;
+    width: 0%;
+    background: linear-gradient(to right,#10b981,#06b6d4);
+    border-radius: 10px;
+    transition: 1s;
+}
+
+/* BUTTON */
+.btn {
+    margin-top: 20px;
+    padding: 10px;
+    background: linear-gradient(to right,#10b981,#06b6d4);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+
+<nav>
+    <h2>🌿 NicoLeaf</h2>
+    <a href="/" style="color:#aaa;">New</a>
+</nav>
+
+<div class="container">
+
+<div class="card">
+
+<img src="{{ image_url }}">
+
+<div>
+    <h1>{{ analysis.nicotine_level }}%</h1>
+
+    <div class="bar-bg">
+        <div class="bar-fill" id="bar"></div>
+    </div>
+
+    <p id="label"></p>
+
+    <button onclick="location.href='/'" class="btn">Analyze Again</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+window.onload = () => {
+    const value = {{ analysis.nicotine_level }};
+    const percent = (value/5)*100;
+
+    document.getElementById("bar").style.width = percent + "%";
+
+    let label = "";
+    if(value >= 3.5) label = "🔥 High Nicotine";
+    else if(value >= 2) label = "⚠️ Medium Nicotine";
+    else label = "✅ Low Nicotine";
+
+    document.getElementById("label").innerText = label;
+}
+</script>
+
+</body>
+</html>

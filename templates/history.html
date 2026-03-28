@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>History - NicoLeaf</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #020617;
+    color: white;
+}
+
+/* NAV */
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* GRID */
+.container {
+    padding: 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: 0.3s;
+    position: relative;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* LEVEL COLORS */
+.low { color: #10b981; }
+.medium { color: #facc15; }
+.high { color: #ef4444; }
+
+.small {
+    color: #aaa;
+    font-size: 12px;
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: #ef4444;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: #111;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.modal button {
+    margin: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.confirm { background: #ef4444; color: white; }
+.cancel { background: #333; color: white; }
+
+</style>
+</head>
+
+<body>
+
+<nav>
+    <h2>🌿 NicoLeaf</h2>
+    <a href="/" style="color:#aaa;">New</a>
+</nav>
+
+<div class="container">
+<h1>History</h1>
+
+<div class="grid">
+
+{% for a in analyses %}
+
+{% set level = "low" %}
+{% if a.nicotine_level >= 3.5 %}
+    {% set level = "high" %}
+{% elif a.nicotine_level >= 2 %}
+    {% set level = "medium" %}
+{% endif %}
+
+<div class="card">
+
+<button class="delete-btn" onclick="openModal({{ a.id }})">🗑</button>
+
+<img src="{{ url_for('static', filename='uploads/' + a.image_filename) }}">
+
+<h3 class="{{ level }}">{{ a.nicotine_level }}%</h3>
+
+<p class="small">{{ a.timestamp.strftime('%d %b %Y') }}</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+<div class="modal-box">
+    <p>Are you sure you want to delete?</p>
+    <button class="confirm" onclick="confirmDelete()">Delete</button>
+    <button class="cancel" onclick="closeModal()">Cancel</button>
+</div>
+</div>
+
+<script>
+let deleteId = null;
+
+function openModal(id){
+    deleteId = id;
+    document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal(){
+    document.getElementById("modal").style.display = "none";
+}
+
+function confirmDelete(){
+    window.location.href = "/delete/" + deleteId;
+}
+</script>
+
+</body>
+</html>
